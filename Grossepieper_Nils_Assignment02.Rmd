@@ -24,6 +24,7 @@ library(tidyverse)
 library(ggplot2)
 
 ```
+
 ```{r}
 
 # Set up the working directory:
@@ -265,6 +266,47 @@ summary(regression_2)
 <div class="alert alert-block alert-info">
 (@) Display a scatter plot in which we map *log* inflation rates (use $\mathrm{log}(\mathit{inflation} + 0.01)$) on the x-axis and the happiness score on the y-axis.
 </div>
+
+```{r, warning=FALSE}
+
+# I add a new column to the happy_inflation data log(Inflation + 0.01), for this
+# I will add 0.01 and at the end I will take the log().
+# Since some inflation values are still negative we will lose some observation,
+# since you can not take the log() of a negative value.
+
+# Create the new column log_inflation
+log_inflation <- happy_inflation$Inflation + 0.01
+log_inflation <- log(log_inflation)
+happy_inflation$log_inflation <- log_inflation
+
+# Create the scatter plot
+plot_1 <- ggplot(happy_inflation, aes(x = log_inflation, y = Happiness.Score)) + geom_point()
+plot_1
+
+# You can see no clear (only a weak) correlation between the happiness score and the logarithmic 
+# inflation rate, as seen before in the previous exercises.
+
+```
+
+<div class="alert alert-block alert-info">
+(@) Return to the simple linear model you estimated in Problem 4. Add a regression line calculated from this model specification but using $\mathrm{log}(\mathit{inflation} + 0.01)$ to the plot from part a) of this problem. Do not include confidence intervals.
+</div>
+
+```{r}
+
+# Create a new regression for log_Inflation:
+regression_3 <- lm(Happiness.Score ~ log_inflation, data = happy_inflation)
+summary(regression_3)
+
+# Create a scatter plot with regression line:
+plot_2 <- plot_1 + geom_smooth(se = FALSE, color = "red", method = "lm")
+plot_2
+
+# The regression line suggest a negative correlation between the happiness score
+# and the logarithmic inflation, this is the same result as from the regression.
+
+```
+
 
 
 
