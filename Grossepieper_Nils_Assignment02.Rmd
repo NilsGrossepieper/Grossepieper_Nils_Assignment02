@@ -69,3 +69,35 @@ head(happy, 10)
 
 ```
 
+***
+
+### Inflation data
+
+Data on inflation is available from World Bank. 
+
+<div class="alert alert-block alert-info">
+(@) Download the most current version of the data from [their web site](https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG). 
+(@) Import the data calling it `inflation` and turn it into a tidy format.
+</div>
+
+```{r}
+
+# Import the inflation data:
+inflation <- read_csv("API_FP.CPI.TOTL.ZG_DS2_en_csv_v2_4701153/API_FP.CPI.TOTL.ZG_DS2_en_csv_v2_4701153.csv",
+                      skip = 4)
+
+# Set up subsets of the data frames containing only the important variables:
+inflation <- inflation %>% select(`Country Name`, `2015`, `2016`, `2017`, `2018`,
+                                  `2019`)
+
+# Transform the data set inflation into a tidy data format:
+inflation_tidy <- inflation %>% pivot_longer(cols = c(`2015`, `2016`, `2017`,
+                                                      `2018`, `2019`), names_to = "Year",
+                                             values_to = "Inflation")
+
+# Rename the column Country Name:
+inflation_tidy <- inflation_tidy %>% rename("Country" = 1)
+head(inflation_tidy, 10)
+
+```
+
