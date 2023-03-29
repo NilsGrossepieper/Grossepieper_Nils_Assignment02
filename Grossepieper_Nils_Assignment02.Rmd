@@ -5,3 +5,67 @@ date: "2023-03-27"
 output: html_document
 ---
 
+```{r setup, include = F}
+options(scipen=999)
+```
+
+***
+
+### Happiness data
+
+<div class="alert alert-block alert-info">
+(@) Begin by importing the data on happiness. Sadly, the data is only available in several separate data sets. Import the data on the years 2015 through 2019 and merge them. You are going to need to identify and fix problems with incompatible column names.
+</div>
+
+```{r libraries, warning=FALSE}
+
+# Load all important libraries:
+library(tidyverse)
+library(ggplot2)
+
+```
+```{r}
+
+# Set up the working directory:
+path <- "C:/Users/gross/OneDrive/Dokumente/Grossepieper_Nils_Assignment02"
+setwd(path)
+
+# Import the data sets for the years 2015 up to 2019:
+happy_2015 <- read_csv("happy_data/happy_2015.csv", na = c("", "NA"))
+happy_2016 <- read_csv("happy_data/happy_2016.csv", na = c("", "NA"))
+happy_2017 <- read_csv("happy_data/happy_2017.csv", na = c("", "NA"))
+happy_2018 <- read_csv("happy_data/happy_2018.csv", na = c("", "NA"))
+happy_2019 <- read_csv("happy_data/happy_2019.csv", na = c("", "NA"))
+
+# Add a year variable to every data set:
+happy_2015$Year <- replicate(nrow(happy_2015), 2015)
+happy_2016$Year <- replicate(nrow(happy_2016), 2016)
+happy_2017$Year <- replicate(nrow(happy_2017), 2017)
+happy_2018$Year <- replicate(nrow(happy_2018), 2018)
+happy_2019$Year <- replicate(nrow(happy_2019), 2019)
+
+# Set up subsets of the data frames containing only the important variables:
+happy_2015 <- happy_2015 %>% select(Year, Country, `Happiness Rank`, `Happiness Score`)
+happy_2016 <- happy_2016 %>% select(Year, Country, `Happiness Rank`, `Happiness Score`)
+happy_2017 <- happy_2017 %>% select(Year, Country, Happiness.Rank, Happiness.Score)
+happy_2018 <- happy_2018 %>% select(Year, `Country or region`, `Overall rank`, Score)
+happy_2019 <- happy_2019 %>% select(Year, `Country or region`, `Overall rank`, Score)
+
+# Rename all columns based on the happy_2017 variable names:
+happy_2015 <- happy_2015 %>% rename("Happiness.Rank" = 3,
+                                    "Happiness.Score" = 4)
+happy_2016 <- happy_2016 %>% rename("Happiness.Rank" = 3,
+                                    "Happiness.Score" = 4)
+happy_2018 <- happy_2018 %>% rename("Country" = 2,
+                                    "Happiness.Rank" = 3,
+                                    "Happiness.Score" = 4)
+happy_2019 <- happy_2019 %>% rename("Country" = 2,
+                                    "Happiness.Rank" = 3,
+                                    "Happiness.Score" = 4)
+
+# Now we can merge the five data sets to one data set happy:
+happy <- rbind(happy_2015, happy_2016, happy_2017, happy_2018, happy_2019)
+head(happy, 10)
+
+```
+
