@@ -307,6 +307,24 @@ plot_2
 
 ```
 
+<div class="alert alert-block alert-info">
+(@) Finally, create a faceted plot that features one year per subplot. Each subplot should look like the plot from part b) of this problem but only including the data from the respective year. Have a maximum of 3 subplots per row.
+</div>
+
+```{r}
+
+# Now create the facet plot:
+plot_3 <- ggplot(data = happy_inflation, aes(x = log_inflation, y = Happiness.Score)) +
+  geom_point() + geom_smooth(se = FALSE, color = "red", method = "lm") +
+  facet_wrap(vars(Year), ncol = 3)
+plot_3
+
+# The plots for all three years look more or less similar this proofs my assumption,
+# that countries as dummy variables can explain the model better than years as
+# dummy variable.
+
+```
+
 
 
 
