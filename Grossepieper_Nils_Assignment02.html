@@ -368,6 +368,159 @@ available in several separate data sets. Import the data on the years
 fix problems with incompatible column names.</li>
 </ol>
 </div>
+<pre class="r"><code># Load all important libraries:
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre class="r"><code># Set up the working directory:
+path &lt;- &quot;C:/Users/gross/OneDrive/Dokumente/Grossepieper_Nils_Assignment02&quot;
+setwd(path)
+
+# Import the data sets for the years 2015 up to 2019:
+happy_2015 &lt;- read_csv(&quot;happy_data/happy_2015.csv&quot;, na = c(&quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## Rows: 158 Columns: 12
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (2): Country, Region
+## dbl (10): Happiness Rank, Happiness Score, Standard Error, Economy (GDP per ...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>happy_2016 &lt;- read_csv(&quot;happy_data/happy_2016.csv&quot;, na = c(&quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## Rows: 157 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (2): Country, Region
+## dbl (11): Happiness Rank, Happiness Score, Lower Confidence Interval, Upper ...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>happy_2017 &lt;- read_csv(&quot;happy_data/happy_2017.csv&quot;, na = c(&quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## Rows: 155 Columns: 12
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): Country
+## dbl (11): Happiness.Rank, Happiness.Score, Whisker.high, Whisker.low, Econom...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>happy_2018 &lt;- read_csv(&quot;happy_data/happy_2018.csv&quot;, na = c(&quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## Rows: 156 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): Country or region, Perceptions of corruption
+## dbl (7): Overall rank, Score, GDP per capita, Social support, Healthy life e...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>happy_2019 &lt;- read_csv(&quot;happy_data/happy_2019.csv&quot;, na = c(&quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## Rows: 156 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Country or region
+## dbl (8): Overall rank, Score, GDP per capita, Social support, Healthy life e...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Add a year variable to every data set:
+happy_2015$Year &lt;- replicate(nrow(happy_2015), 2015)
+happy_2016$Year &lt;- replicate(nrow(happy_2016), 2016)
+happy_2017$Year &lt;- replicate(nrow(happy_2017), 2017)
+happy_2018$Year &lt;- replicate(nrow(happy_2018), 2018)
+happy_2019$Year &lt;- replicate(nrow(happy_2019), 2019)
+
+# Set up subsets of the data frames containing only the important variables:
+happy_2015 &lt;- happy_2015 %&gt;% select(Year, Country, `Happiness Rank`, `Happiness Score`)
+happy_2016 &lt;- happy_2016 %&gt;% select(Year, Country, `Happiness Rank`, `Happiness Score`)
+happy_2017 &lt;- happy_2017 %&gt;% select(Year, Country, Happiness.Rank, Happiness.Score)
+happy_2018 &lt;- happy_2018 %&gt;% select(Year, `Country or region`, `Overall rank`, Score)
+happy_2019 &lt;- happy_2019 %&gt;% select(Year, `Country or region`, `Overall rank`, Score)
+
+# Rename all columns based on the happy_2017 variable names:
+happy_2015 &lt;- happy_2015 %&gt;% rename(&quot;Happiness.Rank&quot; = 3,
+                                    &quot;Happiness.Score&quot; = 4)
+happy_2016 &lt;- happy_2016 %&gt;% rename(&quot;Happiness.Rank&quot; = 3,
+                                    &quot;Happiness.Score&quot; = 4)
+happy_2018 &lt;- happy_2018 %&gt;% rename(&quot;Country&quot; = 2,
+                                    &quot;Happiness.Rank&quot; = 3,
+                                    &quot;Happiness.Score&quot; = 4)
+happy_2019 &lt;- happy_2019 %&gt;% rename(&quot;Country&quot; = 2,
+                                    &quot;Happiness.Rank&quot; = 3,
+                                    &quot;Happiness.Score&quot; = 4)
+
+# Now we can merge the five data sets to one data set happy:
+happy &lt;- rbind(happy_2015, happy_2016, happy_2017, happy_2018, happy_2019)
+head(happy, 10)</code></pre>
+<pre><code>## # A tibble: 10 × 4
+##     Year Country     Happiness.Rank Happiness.Score
+##    &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;           &lt;dbl&gt;
+##  1  2015 Switzerland              1            7.59
+##  2  2015 Iceland                  2            7.56
+##  3  2015 Denmark                  3            7.53
+##  4  2015 Norway                   4            7.52
+##  5  2015 Canada                   5            7.43
+##  6  2015 Finland                  6            7.41
+##  7  2015 Netherlands              7            7.38
+##  8  2015 Sweden                   8            7.36
+##  9  2015 New Zealand              9            7.29
+## 10  2015 Australia               10            7.28</code></pre>
+<hr />
+</div>
+<div id="inflation-data" class="section level3">
+<h3>Inflation data</h3>
+<p>Data on inflation is available from World Bank.</p>
+<div class="alert alert-block alert-info">
+<ol start="2" class="example" style="list-style-type: decimal">
+<li>Download the most current version of the data from <a href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG">their web
+site</a>.</li>
+<li>Import the data calling it <code>inflation</code> and turn it into a
+tidy format.</li>
+</ol>
+</div>
+<pre class="r"><code># Import the inflation data:
+inflation &lt;- read_csv(&quot;API_FP.CPI.TOTL.ZG_DS2_en_csv_v2_4701153/API_FP.CPI.TOTL.ZG_DS2_en_csv_v2_4701153.csv&quot;,
+                      skip = 4)</code></pre>
+<pre><code>## New names:
+## Rows: 266 Columns: 67
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (4): Country Name, Country Code, Indicator Name, Indicator Code dbl (62): 1960,
+## 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, ... lgl (1): ...67
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `` -&gt; `...67`</code></pre>
+<pre class="r"><code># Set up subsets of the data frames containing only the important variables:
+inflation &lt;- inflation %&gt;% select(`Country Name`, `2015`, `2016`, `2017`, `2018`,
+                                  `2019`)
+
+# Transform the data set inflation into a tidy data format:
+inflation_tidy &lt;- inflation %&gt;% pivot_longer(cols = c(`2015`, `2016`, `2017`,
+                                                      `2018`, `2019`), names_to = &quot;Year&quot;,
+                                             values_to = &quot;Inflation&quot;)
+
+# Rename the column Country Name:
+inflation_tidy &lt;- inflation_tidy %&gt;% rename(&quot;Country&quot; = 1)
+head(inflation_tidy, 10)</code></pre>
+<pre><code>## # A tibble: 10 × 3
+##    Country                     Year  Inflation
+##    &lt;chr&gt;                       &lt;chr&gt;     &lt;dbl&gt;
+##  1 Aruba                       2015      0.475
+##  2 Aruba                       2016     -0.931
+##  3 Aruba                       2017     -1.03 
+##  4 Aruba                       2018      3.63 
+##  5 Aruba                       2019      4.26 
+##  6 Africa Eastern and Southern 2015      5.25 
+##  7 Africa Eastern and Southern 2016      6.57 
+##  8 Africa Eastern and Southern 2017      6.40 
+##  9 Africa Eastern and Southern 2018      4.72 
+## 10 Africa Eastern and Southern 2019      4.12</code></pre>
 </div>
 
 

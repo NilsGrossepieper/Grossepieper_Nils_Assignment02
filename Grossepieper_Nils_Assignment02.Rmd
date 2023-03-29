@@ -101,3 +101,27 @@ head(inflation_tidy, 10)
 
 ```
 
+***
+
+### Merging the data
+
+<div class="alert alert-block alert-info">
+(@) Merge the two data frames `happy` and `inflation` by country and year. Only keep those observations for which the key exists in both tables.
+</div>
+
+```{r}
+
+# Check if the variables have the same type and if not correct this:
+glimpse(happy)
+glimpse(inflation_tidy)
+inflation_tidy$Year <- as.numeric(inflation_tidy$Year)
+
+# Now I perform a inner join on the data sets happy and inflation_tidy:
+happy_inflation <- inner_join(happy, inflation_tidy, by = c("Country", "Year"))
+
+# Remove all NA values:
+happy_inflation <- na.omit(happy_inflation)
+head(happy_inflation, 10)
+
+```
+
