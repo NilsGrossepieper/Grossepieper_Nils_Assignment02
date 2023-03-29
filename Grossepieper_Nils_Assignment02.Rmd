@@ -125,3 +125,26 @@ head(happy_inflation, 10)
 
 ```
 
+<div class="alert alert-block alert-info">
+(@) Which table contains data about more countries than the other? How many of these countries are dropped by merging the data sets?
+</div>
+
+```{r}
+
+# Count the unique countries in happy, inflation_tidy and the combination of both
+# data sets:
+length(unique(happy$Country))
+length(unique(inflation_tidy$Country))
+sum(unique(happy$Country) %in% unique(inflation_tidy$Country))
+
+# The data set tidy_inflation has more countries. 
+# When you merge the two data sets (without dropping the NA-values) you end up 
+# with 142 this means that you loose 124 countries from inflation_tidy have been
+# dropped
+
+```
+
+
+
+
+
