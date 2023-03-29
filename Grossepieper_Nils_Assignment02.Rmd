@@ -144,6 +144,69 @@ sum(unique(happy$Country) %in% unique(inflation_tidy$Country))
 
 ```
 
+***
+
+### Fixed effects regression
+
+At this point we want to analyze possible effects of inflation on the happiness in a country. 
+
+<div class="alert alert-block alert-info">
+(@) Estimate a simple linear model, regressing the inflation rate on the happiness score. What do you find? Interpret the coefficients and discuss the statistical significance of the findings. Using a strong example from the data, show the economic significance of the findings by comparing inflation rates of two countries of your choice.
+</div>
+
+```{r}
+
+# I estimate a simple linear model, in my case inflation rate is the regression
+# variable and happiness is the variable that I want to estimate.
+
+regression_1 <- lm(Happiness.Score ~ Inflation, data = happy_inflation)
+summary(regression_1)
+
+# I see in the regression that inflation has a significant influence on the 
+# happiness of people.
+# You can see the significance of this effect at the t-value, its sum is bigger
+# than the typical threshold of |1.96|. This means that inflation has a statistical
+# significant effect on happiness.
+# When the inflation rate increases by one unit (here in percent point), then you
+# can see a decrease in happiness by 0.0108 units. This is just a small effect,
+# but the effect is still statistically significant.
+
+# The effect of inflation on happiness is statistically significant but inflation
+# has only a small effect on the happiness of the people, this explains why the
+# R^2 is so small. Only 3.4% percent of the variation in happiness can be explained 
+# by inflation. 
+# This is a sign that there are other factors, which are not in the model which
+# determine the happiness of the people.
+
+happy_inflation_2019 <- select(filter(happy_inflation, Year == 2019),
+                               c(Year, Country, Inflation,
+                                 Happiness.Score))
+
+# When I only look at the data from 2019 I can see that certain countries fulfill
+# the economic explanation that a lower inflation leads to a higher happiness score.
+# The countries Denmark and Botswana are prime examples for this, Denmark has a
+# low inflation rate and is one of the happiest countries in the world, while
+# Botswana has a high inflation rate and one of the lowest happiness score of all
+# countries.
+
+happy_inflation_2019[2, ]
+happy_inflation_2019[120, ]
+
+# When you remember that my regression model explains only 3.4% percent of the
+# variation in happiness, you can easily find examples where one country has a
+# higher inflation rate and a higher happiness score.
+
+happy_inflation_2019[31, ]
+happy_inflation_2019[126, ]
+
+# Uruguay has a much higher inflation than South Sudan but it still has also a much
+# higher happiness score. This leads to the conclusion that there are other economic
+# factors that significantly influence the happiness of people in a country.
+
+# Higher inflation has a decreasing effect for the happiness of the citizen of a
+# country, but it is only one small factor which determines the happiness.
+
+```
 
 
 
