@@ -208,6 +208,63 @@ happy_inflation_2019[126, ]
 
 ```
 
+<div class="alert alert-block alert-info">
+(@) Apply what you have learned about fixed-effects regression on the problem at hand. Briefly discuss possible issues regarding the validity of the coefficient we estimated in the simple linear model.  
+  Propose a way of assessing these issues by fixed-effects regression, noting down an improved regression formula. Describe the property of the variable of inflation that allows to estimate the fixed-effects model.
+Estimate the model and discuss changes in the statistical significance of the findings.  
+  (Hint: Consider using the package {fixest} for estimation in R)
+</div>
+
+```{r}
+
+# I have seen that my regression model from exercise six only explains a small
+# fraction of my model.
+
+# One reason why this might be the case lies in the fact that my data sets is
+# a panel data set, which contains different countries over different time periods.
+
+# With a fixed effects model it is possible to prevent the bias of the estimated
+# parameters of the regression model. For this purpose, it is useful to realize
+# that variables can be divided into two groups. On the one hand, there are variables
+# that change over time and variables that remain constant over time, hereafter
+# referred to as time-invariant variables. These time-invariant variables have an
+# influence on the dependent variable regardless of whether this factor can be observed
+# or not. In the fixed effects method, the goal is to overcome the time-invariant
+# influences on the dependent variable.
+
+# I can solve the endogeneity problem, which arises from the time-invariant unobserved
+# effects with dummy variables. In this case I could use the different countries as
+# dummy variables, the different years as dummy variables or both together as dummy
+# variables.
+
+# All approaches might lead to a good regression model, but in this case I choose
+# only countries as dummy variables.
+# I suppose the difference in happiness is explained more by in what country you live
+# in rather than by what year you live in (since I am only looking at a short period of time).
+# I believe that happiness is more influenced by whether a person lives in Switzerland
+# or Haiti, rather than whether they live in Switzerland in 2015 or 2016.
+# That is why I use countries as dummy variables, which have to be factors. 
+
+regression_2 <- lm(Happiness.Score ~ Inflation + as.factor(Country),
+               data = happy_inflation)
+summary(regression_2)
+
+# In my fixed_effects model, I can see that inflation has no longer a statistically
+# significant effect on the happiness score of a country, but most of the country
+# dummy variables have a significant effect on the happiness of their citizen.
+
+# The new model can explain 96% percent of the variation in the happiness score, 
+# this is a much better value compared to our initial regression in regression_1.
+
+```
+
+***
+
+### Visualization
+
+<div class="alert alert-block alert-info">
+(@) Display a scatter plot in which we map *log* inflation rates (use $\mathrm{log}(\mathit{inflation} + 0.01)$) on the x-axis and the happiness score on the y-axis.
+</div>
 
 
 
